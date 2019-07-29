@@ -135,7 +135,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     'host'
   )}/api/v1/users/resetPassword/${resetToken}`
 
-  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}. 
+  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.
                   \nIf you didn't forgot your password, please ignore this emaiL!`
 
   try {
@@ -154,6 +154,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     user.passwordResetExpires = undefined
     await user.save({ validateBeforeSave: false })
 
+    console.log(err)
     return next(
       new AppError('There was an error sending the email. Try again later!'),
       500
