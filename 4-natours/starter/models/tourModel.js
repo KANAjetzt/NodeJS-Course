@@ -150,7 +150,7 @@ tourSchema.pre(/^find/, function(next) {
 tourSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'guides',
-    select: 'role _id name email',
+    select: 'role _id name email photo',
   })
 
   next()
