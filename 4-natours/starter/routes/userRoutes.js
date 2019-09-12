@@ -1,4 +1,5 @@
 const express = require('express')
+
 const {
   getMe,
   updateMe,
@@ -8,6 +9,8 @@ const {
   getUser,
   updateUser,
   deleteUser,
+  uploadUserPhoto,
+  resizeUserPhoto,
 } = require('./../controllers/userController')
 
 const {
@@ -34,7 +37,7 @@ router.use(protect) //############ protect all routes from here
 router.patch('/updateMyPassword', updatePassword)
 
 router.get('/me', getMe, getUser)
-router.patch('/updateMe', updateMe)
+router.patch('/updateMe', uploadUserPhoto, resizeUserPhoto, updateMe)
 router.delete('/deleteMe', deleteMe)
 
 router.use(restrictTo('admin')) //####### restrict all routes to admin from here
