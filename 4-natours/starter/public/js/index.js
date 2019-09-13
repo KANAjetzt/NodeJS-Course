@@ -1,6 +1,7 @@
 /* eslint-disable */
-
 import '@babel/polyfill'
+
+import showAlert from './alerts'
 import login from './login'
 import logout from './logout'
 import updateSettings from './updateSettings'
@@ -14,6 +15,7 @@ const logoutBtn = document.querySelector('.nav__el--logout')
 const userDataForm = document.querySelector('.form-user-data')
 const userPasswordForm = document.querySelector('.form-user-password')
 const bookBtn = document.getElementById('book-tour')
+const alertMessage = document.querySelector('body').dataset.alert
 
 // DELEGATION
 if (mapBox) {
@@ -62,3 +64,5 @@ if (bookBtn)
     const { tourid } = e.target.dataset
     bookTour(tourid)
   })
+
+if (alertMessage) showAlert('success', alertMessage, 20)

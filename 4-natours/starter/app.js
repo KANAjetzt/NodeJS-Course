@@ -8,6 +8,7 @@ const xss = require('xss-clean')
 const hpp = require('hpp')
 const cookieParser = require('cookie-parser')
 const compression = require('compression')
+const cors = require('cors')
 
 const AppError = require('./utils/appError')
 const globalErrorHandler = require('./controllers/errorController')
@@ -15,14 +16,28 @@ const tourRouter = require('./routes/tourRoutes')
 const userRouter = require('./routes/userRoutes')
 const reviewRouter = require('./routes/reviewRoutes')
 const bookingRouter = require('./routes/bookingRoutes')
+const { webhookCheckout } = require('./controllers/bookingController')
 const viewRouter = require('./routes/viewRoutes')
 
 const app = express()
+
+app.enable('trust proxy')
 
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'views'))
 
 // GLOBAL MIDDLEWARES
+
+// Implement Cors
+app.use(cors())
+// Access-Control-Allow-Origin * --> Allow everyone
+
+// allow access for one Domain
+// api.natours.com <-- req natours.com
+// app.use(cors({ origin: 'https://www.natours.com' }))
+
+// Complex requests --> everything that is not get / post, or sends custom headers or cookies.  )
+app.options('*', cors())
 
 // Serving static files
 app.use(express.static(path.join(__dirname, 'public')))
@@ -42,6 +57,12 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP, pleas try again later!',
 })
 app.use('/api', limiter)
+
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  webhookCheckout
+)
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }))
